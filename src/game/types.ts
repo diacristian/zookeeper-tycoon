@@ -78,7 +78,23 @@ export interface GameEvaluation {
   isSolved: boolean;
 }
 
+export interface AffectedAnimal {
+  cell: number;
+  animal: AnimalKind;
+}
+
+export interface PlacementHint {
+  cell: number;
+  kind: AnimalKind;
+  /** Plain-language explanation of what the move buys the zoo. */
+  reason: string;
+  /** Animals that flip from unhappy to happy because of this move. */
+  rescued: AffectedAnimal[];
+  /** Animals that were happy and lose a literal because of this move. */
+  unsettled: AffectedAnimal[];
+}
+
 export type HintResult =
-  | { status: "placement"; cell: number; kind: AnimalKind }
+  | ({ status: "placement" } & PlacementHint)
   | { status: "solved" }
   | { status: "stuck" };

@@ -76,7 +76,8 @@ export function HowToPlay({ open, onClose }: HowToPlayProps) {
           <div>
             <p className="text-sm font-extrabold text-forest">Stuck? Ask Ranger AI.</p>
             <p className="mt-0.5 text-xs font-medium leading-relaxed text-forest/55">
-              It runs a small exact solver over the remaining placements and highlights one legal next move.
+              It runs a small exact solver over the remaining placements, highlights one legal next move,
+              and tells you which condition that move satisfies or which neighbour it fixes.
             </p>
           </div>
         </div>

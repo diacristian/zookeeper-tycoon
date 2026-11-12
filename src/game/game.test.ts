@@ -8,6 +8,7 @@ import {
   undoMove,
 } from "./engine";
 import { SAVANNA_LEVEL } from "./level";
+import { explainPlacement } from "./explain";
 import type { AnimalKind, GameState } from "./types";
 
 const WINNING_LAYOUT: ReadonlyArray<readonly [number, AnimalKind]> = [
@@ -126,5 +127,39 @@ describe("Zookeeper Tycoon rules", () => {
     expect(evaluation.placedCount).toBe(9);
     expect(evaluation.isSolved).toBe(false);
     expect(findHint(game).status).toBe("stuck");
+  });
+
+  it("explains which literal makes the suggested animal happy", () => {
+    const game = play(createGame(SAVANNA_LEVEL), WINNING_LAYOUT.slice(0, 8));
+    const explanation = explainPlacement(game, 10, "gazelle");
+
+    expect(explanation.reason).toContain("This gazelle is happy right away");
+    expect(explanation.reason).toContain("no water is next door");
+  });
+
+  it("names the neighbours a suggested placement rescues", () => {
+    const game = placeAnimal(createGame(SAVANNA_LEVEL), 5, "gazelle");
+    const explanation = explainPlacement(game, 6, "lion");
+
+    expect(explanation.rescued).toContainEqual({ cell: 5, animal: "gazelle" });
+    expect(explanation.reason).toContain("also fixes the gazelle at R2 · C1");
+  });
+
+  it("warns when a suggested placement breaks an existing clause", () => {
+    const game = placeAnimal(createGame(SAVANNA_LEVEL), 17, "monkey");
+    const explanation = explainPlacement(game, 18, "lion");
+
+    expect(explanation.unsettled).toContainEqual({ cell: 17, animal: "monkey" });
+    expect(explanation.reason).toContain("loses a condition");
+  });
+
+  it("always gives the ranger hint a reason", () => {
+    const hint = findHint(createGame(SAVANNA_LEVEL));
+
+    expect(hint.status).toBe("placement");
+    if (hint.status !== "placement") return;
+
+    expect(hint.reason.length).toBeGreaterThan(20);
+    expect(hint.reason).toContain(hint.kind);
   });
 });

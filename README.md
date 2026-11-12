@@ -30,8 +30,9 @@ The Pages workflow runs tests and builds on every push to `main`.
 4. A green check means at least one literal is true. A red `!` means all three are false.
 5. Fill all nine pens with every clause satisfied to win.
 
-Extras: **Ranger AI** finds one legal next move with an exact solver, **Undo**
-rewinds the last action, and **Reset** starts a fresh habitat.
+Extras: **Ranger AI** finds one legal next move with an exact solver and explains
+which condition it satisfies or which neighbour it fixes, **Undo** rewinds the
+last action, and **Reset** starts a fresh habitat.
 
 ## 3-SAT mapping
 
@@ -43,7 +44,7 @@ rewinds the last action, and **Reset** starts a fresh habitat.
 | Green check / happy animal | The clause evaluates to true |
 | Red `!` / unhappy animal | All three literals evaluate to false |
 | All nine animals happy | The conjunction of all nine clauses is true |
-| Ranger AI | Backtracking search over the remaining placements |
+| Ranger AI | Backtracking search over the remaining placements, plus a clause-level reason |
 
 Adjacency is cardinal only: up, down, left, and right. The level is handcrafted,
 so the solver is deliberately small and exact. It is a teaching toy for the shape

@@ -1,4 +1,5 @@
 import { SAVANNA_LEVEL } from "./level";
+import { explainPlacement } from "./explain";
 import { findCompletion } from "./solver";
 import { ANIMAL_RULES, isAnimalHappy, isAnimalKind, isLiteralSatisfied } from "./rules";
 import {
@@ -148,10 +149,13 @@ export function findHint(state: GameState): HintResult {
     })
     .sort((left, right) => Number(right.isHelpful) - Number(left.isHelpful))[0];
 
+  const kind = completion[helpfulCell.cell] as AnimalKind;
+
   return {
     status: "placement",
     cell: helpfulCell.cell,
-    kind: completion[helpfulCell.cell] as AnimalKind,
+    kind,
+    ...explainPlacement(state, helpfulCell.cell, kind),
   };
 }
 

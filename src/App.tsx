@@ -270,7 +270,7 @@ export default function App() {
                 placed={rulePlaced}
                 onRemove={handleRemove}
               />
-              <RangerHint onHint={handleHint} />
+              <RangerHint hint={hint} onHint={handleHint} />
             </div>
           </aside>
 
@@ -367,7 +367,7 @@ export default function App() {
               placed={rulePlaced}
               onRemove={handleRemove}
             />
-            <RangerHint onHint={handleHint} />
+            <RangerHint hint={hint} onHint={handleHint} />
           </div>
         </main>
 

@@ -20,6 +20,7 @@ interface HabitatBoardProps {
   selectedKind: AnimalKind;
   hint: Extract<HintResult, { status: "placement" }> | null;
   onCellClick: (cell: number) => void;
+  className?: string;
 }
 
 function terrainClass(terrain: Terrain): string {
@@ -37,12 +38,18 @@ export function HabitatBoard({
   selectedKind,
   hint,
   onCellClick,
+  className,
 }: HabitatBoardProps) {
   const evaluationByCell = new Map(animals.map((animal) => [animal.cell, animal]));
   const selectedMeta = SPECIES[selectedKind];
 
   return (
-    <div className="rounded-[2rem] border border-white/80 bg-emerald-950/[0.06] p-1.5 shadow-[inset_0_2px_12px_rgba(23,53,42,0.10)] sm:p-2.5">
+    <div
+      className={cn(
+        "rounded-[1.75rem] border border-white/80 bg-emerald-950/[0.06] p-1 shadow-[inset_0_2px_12px_rgba(23,53,42,0.10)] sm:p-1.5",
+        className,
+      )}
+    >
       <div
         className="grid grid-cols-5 gap-1.5 rounded-[1.5rem] bg-emerald-950/[0.08] p-1.5 sm:gap-2 sm:p-2"
         role="group"

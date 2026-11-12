@@ -11,6 +11,7 @@ interface RuleCardProps {
   inspection: AnimalEvaluation | null;
   placed: number;
   onRemove: () => void;
+  compact?: boolean;
 }
 
 function LiteralMark({ literal }: { literal: Literal }) {
@@ -35,10 +36,75 @@ function LiteralMark({ literal }: { literal: Literal }) {
   );
 }
 
-export function RuleCard({ animal, inspection, placed, onRemove }: RuleCardProps) {
+export function RuleCard({ animal, inspection, placed, onRemove, compact = false }: RuleCardProps) {
   const meta = SPECIES[animal];
   const isInspecting = inspection !== null;
   const happy = inspection?.happy ?? false;
+
+  if (compact) {
+    return (
+      <section className="shrink-0 overflow-hidden rounded-2xl border border-white/80 bg-white/85 shadow-[0_8px_20px_rgba(38,67,49,0.08)] backdrop-blur-md">
+        <div className={cn("flex items-center gap-2 border-b px-2 py-1.5", meta.soft, meta.border)}>
+          <span className="text-lg leading-none" aria-hidden="true">{meta.emoji}</span>
+          <p className="min-w-0 flex-1 truncate text-[11px] font-extrabold text-forest">
+            {meta.name} wishes
+            {isInspecting && <span className="font-bold text-forest/45"> · {cellShortName(inspection.cell)}</span>}
+          </p>
+          {isInspecting ? (
+            <span
+              className={cn(
+                "shrink-0 rounded-full px-2 py-0.5 text-[9px] font-extrabold",
+                happy ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-700",
+              )}
+            >
+              {happy ? "Happy" : "Needs help"}
+            </span>
+          ) : (
+            <span className="shrink-0 rounded-full bg-white/70 px-2 py-0.5 text-[9px] font-extrabold text-forest/50">
+              {placed}/3 placed
+            </span>
+          )}
+          {isInspecting && (
+            <button
+              type="button"
+              onClick={onRemove}
+              className="inline-flex shrink-0 items-center gap-1 rounded-full border border-forest/10 bg-white px-2 py-0.5 text-[9px] font-extrabold text-forest/65 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+            >
+              <Trash2 className="h-3 w-3" aria-hidden="true" />
+              Send back
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-3 gap-1 px-1.5 py-1.5">
+          {ANIMAL_RULES[animal].map((literal, index) => {
+            const satisfied = inspection?.literals[index]?.satisfied;
+
+            return (
+              <div
+                key={literal.text}
+                aria-label={`${literal.text}: ${satisfied === undefined ? "not checked" : satisfied ? "true" : "false"}`}
+                className={cn(
+                  "flex min-w-0 items-center justify-center gap-1 rounded-lg border px-1 py-1 text-[9.5px] font-extrabold leading-none",
+                  satisfied === true && "border-emerald-200 bg-emerald-50 text-emerald-800",
+                  satisfied === false && "border-red-200 bg-red-50 text-red-600",
+                  satisfied === undefined && "border-forest/10 bg-white/60 text-forest/55",
+                )}
+              >
+                <LiteralMark literal={literal} />
+                <span className="truncate">{literal.shortText}</span>
+                {satisfied !== undefined && (
+                  satisfied
+                    ? <Check className="h-3 w-3 shrink-0" strokeWidth={3} aria-hidden="true" />
+                    : <X className="h-3 w-3 shrink-0" strokeWidth={3} aria-hidden="true" />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="overflow-hidden rounded-3xl border border-white/80 bg-white/80 shadow-[0_16px_36px_rgba(38,67,49,0.10)] backdrop-blur-md">
